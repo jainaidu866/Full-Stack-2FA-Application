@@ -1,13 +1,18 @@
-// REGISTER
+// ==========================================
+// REGISTER - Create a new user account
+// ==========================================
 async function register() {
     const username = document.getElementById("reg-username").value;
     const password = document.getElementById("reg-password").value;
+    const msg = document.getElementById("msg");
 
+    // Basic validation
     if (!username || !password) {
-        alert("Please enter username and password");
+        showMsg(msg, "Please enter username and password", "error");
         return;
     }
 
+    // Send data to backend API
     const data = new URLSearchParams();
     data.append("username", username);
     data.append("password", password);
@@ -21,20 +26,23 @@ async function register() {
     const result = await res.json();
 
     if (result.message) {
-        alert("Registered successfully! Please login.");
-        window.location.href = "/login-page";
+        showMsg(msg, "Account created! Redirecting to login...", "success");
+        setTimeout(() => window.location.href = "/login-page", 1500);
     } else {
-        alert(result.error);
+        showMsg(msg, result.error, "error");
     }
 }
 
-// LOGIN
+// ==========================================
+// LOGIN - Authenticate user
+// ==========================================
 async function login() {
     const username = document.getElementById("login-username").value;
     const password = document.getElementById("login-password").value;
+    const msg = document.getElementById("msg");
 
     if (!username || !password) {
-        alert("Please enter username and password");
+        showMsg(msg, "Please enter username and password", "error");
         return;
     }
 
@@ -51,44 +59,49 @@ async function login() {
     const result = await res.json();
 
     if (result.message === "Login successful") {
-        // First time - no 2FA yet, go to dashboard
+        // No 2FA yet - go directly to dashboard
         localStorage.setItem("username", username);
         window.location.href = "/dashboard-page";
     } else if (result.message === "2FA required") {
-        // 2FA already enabled, go to OTP verify page
+        // 2FA is enabled - go to OTP verification page
         localStorage.setItem("username", username);
         window.location.href = "/verify-page";
     } else {
-        alert(result.error || "Login failed");
+        showMsg(msg, result.error || "Login failed", "error");
     }
 }
 
-// ENABLE 2FA - generate and show QR code
+// ==========================================
+// ENABLE 2FA - Generate and display QR code
+// ==========================================
 async function enable2FA() {
     const username = localStorage.getItem("username");
 
     if (!username) {
-        alert("Session expired. Please login again.");
         window.location.href = "/login-page";
         return;
     }
 
+    // Request QR code image from backend
     const res = await fetch(`/enable-2fa/${username}`);
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
 
+    // Show QR code on page
     document.getElementById("qr").src = url;
     document.getElementById("enable-section").style.display = "none";
     document.getElementById("qr-section").style.display = "block";
 }
 
-// VERIFY OTP - after scanning QR on dashboard (first time setup)
+// ==========================================
+// VERIFY OTP - First time 2FA setup on dashboard
+// ==========================================
 async function verifyOTP() {
     const username = localStorage.getItem("username");
     const code = document.getElementById("otp").value;
 
     if (!code) {
-        alert("Please enter OTP");
+        alert("Please enter the OTP");
         return;
     }
 
@@ -105,21 +118,26 @@ async function verifyOTP() {
     const result = await res.json();
 
     if (result.message) {
-        // Hide QR section, show success
+        // Hide QR section, show success message
         document.getElementById("qr-section").style.display = "none";
         document.getElementById("verified-section").style.display = "block";
+        document.getElementById("status-badge").className = "status-badge active";
+        document.getElementById("status-badge").innerText = "✓ 2FA Enabled";
     } else {
-        alert(result.error || "Invalid OTP");
+        alert(result.error || "Invalid OTP. Please try again.");
     }
 }
 
-// VERIFY LOGIN OTP - on verify page (when 2FA already enabled)
+// ==========================================
+// VERIFY LOGIN - OTP check on login (when 2FA already enabled)
+// ==========================================
 async function verifyLogin() {
     const username = localStorage.getItem("username");
     const code = document.getElementById("otp-code").value;
+    const msg = document.getElementById("msg");
 
     if (!code) {
-        alert("Please enter OTP");
+        showMsg(msg, "Please enter the OTP", "error");
         return;
     }
 
@@ -136,27 +154,44 @@ async function verifyLogin() {
     const result = await res.json();
 
     if (result.message) {
+        // OTP correct - go to dashboard
         window.location.href = "/dashboard-page";
     } else {
-        alert(result.error || "Invalid OTP");
+        showMsg(msg, result.error || "Invalid OTP. Please try again.", "error");
     }
 }
 
-// PROTECT DASHBOARD - check if logged in
+// ==========================================
+// CHECK LOGIN - Protect dashboard from unauthenticated access
+// ==========================================
 function checkLogin() {
     const username = localStorage.getItem("username");
+
+    // If no username in storage, redirect to login
     if (!username) {
         window.location.href = "/login-page";
         return;
     }
+
+    // Show welcome message with username
     const welcome = document.getElementById("welcome");
     if (welcome) {
-        welcome.innerText = "Welcome, " + username + "!";
+        welcome.innerText = "Welcome, " + username + "! 👋";
     }
 }
 
-// LOGOUT
+// ==========================================
+// LOGOUT - Clear session and redirect to login
+// ==========================================
 function logout() {
     localStorage.removeItem("username");
     window.location.href = "/login-page";
+}
+
+// ==========================================
+// HELPER - Show styled messages on page
+// ==========================================
+function showMsg(el, text, type) {
+    el.innerText = text;
+    el.className = "msg " + type;
 }

@@ -1,15 +1,38 @@
 <!DOCTYPE html>
-<html>
-<head><title>Verify OTP</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify OTP | 2FA App</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
 <body>
-  <h2>Two-Factor Authentication</h2>
-  <p>Enter the 6-digit code from your Microsoft/Google Authenticator app to complete login.</p>
-  <input id="otp-code" placeholder="Enter 6-digit OTP"><br><br>
-  <button onclick="verifyLogin()">Verify & Login</button>
-  <p id="msg"></p>
-  <br>
-  <a href="/login-page">Back to Login</a>
+  <div class="container">
+    <div class="card">
 
+      <div class="logo">
+        <div class="logo-icon">🔐</div>
+        <span class="logo-text">SecureAuth</span>
+      </div>
+
+      <h1>Verify Identity</h1>
+      <p class="subtitle">Enter the 6-digit code from your Authenticator app to complete login.</p>
+
+      <div class="form-group">
+        <label>One-Time Password</label>
+        <input id="otp-code" class="otp-input" type="text" placeholder="000000" maxlength="6">
+      </div>
+
+      <button class="btn btn-primary" onclick="verifyLogin()">✓ Verify & Login</button>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="link-row">
+        <a href="/login-page">← Back to Login</a>
+      </div>
+
+    </div>
+  </div>
   <script src="/static/script.js"></script>
 </body>
 </html>

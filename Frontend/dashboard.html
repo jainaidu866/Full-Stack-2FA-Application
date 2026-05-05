@@ -1,30 +1,79 @@
 <!DOCTYPE html>
-<html>
-<head><title>Dashboard</title></head>
-<body onload="checkLogin()">
-  <h2>Dashboard</h2>
-  <p id="welcome"></p>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | 2FA App</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
 
-  <div id="enable-section">
-    <p>2FA is not enabled. Enable it to secure your account.</p>
-    <button onclick="enable2FA()">Enable 2FA</button>
+      <div class="logo">
+        <div class="logo-icon">🔐</div>
+        <span class="logo-text">SecureAuth</span>
+      </div>
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <h2 id="welcome">Welcome!</h2>
+        <p>You are securely logged in.</p>
+        <div id="status-badge" class="status-badge inactive">⚠ 2FA Not Enabled</div>
+      </div>
+
+      <!-- Enable 2FA Section -->
+      <div id="enable-section">
+        <p class="section-title">Two-Factor Authentication</p>
+        <p style="font-size:14px; color:var(--text-muted); margin-bottom:16px;">
+          Protect your account with an extra layer of security using an authenticator app.
+        </p>
+        <button class="btn btn-primary" onclick="enable2FA()">🛡 Enable 2FA</button>
+      </div>
+
+      <!-- QR Code Section -->
+      <div id="qr-section" style="display:none;">
+        <p class="section-title">Setup 2FA</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <p>Open <strong>Microsoft Authenticator</strong> or <strong>Google Authenticator</strong> on your phone.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p>Tap <strong>"Add Account"</strong> and scan the QR code below.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p>Enter the <strong>6-digit code</strong> shown in the app to verify.</p>
+        </div>
+
+        <div class="qr-box">
+          <img id="qr" width="180">
+        </div>
+
+        <div class="form-group">
+          <label>Verification Code</label>
+          <input id="otp" class="otp-input" type="text" placeholder="000000" maxlength="6">
+        </div>
+
+        <button class="btn btn-primary" onclick="verifyOTP()">✓ Verify & Enable 2FA</button>
+      </div>
+
+      <!-- Verified Section -->
+      <div id="verified-section" style="display:none;">
+        <div class="success-icon">✓</div>
+        <h1 style="text-align:center; font-size:22px;">2FA Enabled!</h1>
+        <p style="text-align:center; color:var(--text-muted); font-size:14px; margin-top:8px;">
+          Your account is now protected. On your next login, you will be asked for an OTP.
+        </p>
+      </div>
+
+      <div class="divider"></div>
+      <button class="btn btn-danger" onclick="logout()">Logout</button>
+
+    </div>
   </div>
-
-  <div id="qr-section" style="display:none;">
-    <h3>Step 1: Scan this QR Code with Microsoft/Google Authenticator</h3>
-    <img id="qr" width="200"><br><br>
-    <h3>Step 2: Enter the 6-digit code from your app</h3>
-    <input id="otp" placeholder="Enter 6-digit OTP"><br><br>
-    <button onclick="verifyOTP()">Verify & Enable 2FA</button>
-  </div>
-
-  <div id="verified-section" style="display:none;">
-    <p>✅ 2FA is enabled on your account. Your account is now secure.</p>
-  </div>
-
-  <br><br>
-  <button onclick="logout()">Logout</button>
-
   <script src="/static/script.js"></script>
 </body>
 </html>

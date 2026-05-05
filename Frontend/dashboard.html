@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>Dashboard</title></head>
+<body onload="checkLogin()">
+  <h2>Dashboard</h2>
+  <p id="welcome"></p>
+
+  <div id="enable-section">
+    <p>2FA is not enabled. Enable it to secure your account.</p>
+    <button onclick="enable2FA()">Enable 2FA</button>
+  </div>
+
+  <div id="qr-section" style="display:none;">
+    <h3>Step 1: Scan this QR Code with Microsoft/Google Authenticator</h3>
+    <img id="qr" width="200"><br><br>
+    <h3>Step 2: Enter the 6-digit code from your app</h3>
+    <input id="otp" placeholder="Enter 6-digit OTP"><br><br>
+    <button onclick="verifyOTP()">Verify & Enable 2FA</button>
+  </div>
+
+  <div id="verified-section" style="display:none;">
+    <p>✅ 2FA is enabled on your account. Your account is now secure.</p>
+  </div>
+
+  <br><br>
+  <button onclick="logout()">Logout</button>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

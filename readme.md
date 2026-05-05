@@ -1,5 +1,9 @@
 # Full-Stack 2FA Application
 
+📌 About the Project
+A secure full-stack web application that implements user registration and a complete Two-Factor Authentication (2FA) login flow using TOTP (Time-based One-Time Password).
+Users can register an account, log in securely, and enable 2FA by scanning a QR code with Microsoft or Google Authenticator. Once 2FA is enabled, every subsequent login requires a 6-digit OTP from the authenticator app to access the dashboard.
+
 ## 🎥 Demo Video
 > https://youtu.be/amvFa5lpXoI?si=KjtcylGAcDaIieRK
 
